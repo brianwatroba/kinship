@@ -46,3 +46,13 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 - [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
 - [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
 - [Next.js Auth Helpers Docs](https://supabase.com/docs/guides/auth/auth-helpers/nextjs)
+
+## Project init
+
+1. Clone
+2. Ensure you have docker desktop installed
+3. `npm install`
+4. `supabase init`
+5. Create .env.local: `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+6. `supabase start`, add API_URL and ANON_KEY to .env.local
+7. `npm run dev` for both next and supabase local servers
