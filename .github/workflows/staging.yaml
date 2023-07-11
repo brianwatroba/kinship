@@ -10,6 +10,7 @@ on:
 jobs:
   migrate_db:
     runs-on: ubuntu-latest
+    environment: staging
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
