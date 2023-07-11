@@ -7,6 +7,7 @@ export function GET(request: NextRequest) {
       path: request.nextUrl.pathname,
       query: request.nextUrl.search,
       cookies: request.cookies.getAll(),
+      hello: "world",
     },
     {
       status: 200,
