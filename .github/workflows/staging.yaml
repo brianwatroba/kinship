@@ -1,16 +1,16 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - develop
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["CI"]
+    branches: ["develop"]
+    types:
+      - completed
 
 jobs:
   db_link_and_push:
     runs-on: ubuntu-latest
     environment: staging
-    needs: CI
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
