@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS posts (
 );
 
 -- Trigger to update 'updated_at' column on row update
-CREATE TRIGGER handle_updated_at
+CREATE TRIGGER update_posts_updated_at
 BEFORE UPDATE ON posts
 FOR EACH ROW
 EXECUTE PROCEDURE moddatetime (updated_at);

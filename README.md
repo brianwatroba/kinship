@@ -56,3 +56,7 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 5. Create .env.local: `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 6. `supabase start`, add API_URL and ANON_KEY to .env.local
 7. `npm run dev` for both next and supabase local servers
+
+## Deployment:
+
+1. `supabase link --project-ref #PROJECT_REF`

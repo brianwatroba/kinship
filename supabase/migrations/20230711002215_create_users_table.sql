@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Trigger to update 'updated_at' column on row update
-CREATE TRIGGER handle_updated_at
+CREATE TRIGGER update_users_updated_at
 BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE PROCEDURE moddatetime (updated_at);

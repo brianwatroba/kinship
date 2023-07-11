@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS families (
 );
 
 -- Trigger to update 'updated_at' column on row update
-CREATE TRIGGER handle_updated_at
+CREATE TRIGGER update_families_updated_at
 BEFORE UPDATE ON families
 FOR EACH ROW
 EXECUTE PROCEDURE moddatetime (updated_at);
