@@ -10,7 +10,6 @@ on:
 jobs:
   db_link_and_push:
     runs-on: ubuntu-latest
-    environment: staging
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
