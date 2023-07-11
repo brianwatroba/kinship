@@ -32,6 +32,7 @@ jobs:
           fi
   migrate_db:
     runs-on: ubuntu-latest
+    environment: staging
     needs: test
 
     env:
