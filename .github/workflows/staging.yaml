@@ -7,9 +7,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
+  db_link_and_push:
     runs-on: ubuntu-latest
     environment: staging
+    needs: CI
 
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -23,5 +24,6 @@ jobs:
         with:
           version: latest
 
+      - run: supabase login --token $SUPABASE_ACCESS_TOKEN
       - run: supabase link --project-ref $SUPABASE_PROJECT_ID --password $SUPABASE_DB_PASSWORD
       - run: supabase db push
