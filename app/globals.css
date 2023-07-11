@@ -4,23 +4,26 @@
 
 @layer base {
   :root {
-    --background: 200 20% 98%;
-    --btn-background: 200 10% 91%;
-    --btn-background-hover: 200 10% 89%;
-    --foreground: 200 50% 3%;
+    --background: #f4f4f4;
+    /* --btn-background: 200 10% 91%;
+    --btn-background-hover: 200 10% 89%; */
+    /* --foreground: 200 50% 3%; */
+    --viewport-width: 100vw;
+    --primary: #6bb755;
+    --secondary: #b5dbab;
   }
 
-  @media (prefers-color-scheme: dark) {
+  /* @media (prefers-color-scheme: dark) {
     :root {
       --background: 200 50% 3%;
       --btn-background: 200 10% 9%;
       --btn-background-hover: 200 10% 12%;
       --foreground: 200 20% 96%;
     }
-  }
+  } */
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-foreground/20;
   }
@@ -38,5 +41,5 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
+  } */
+/* } */
