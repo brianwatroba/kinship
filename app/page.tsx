@@ -1,32 +1,35 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+"use client";
+import { createClient } from "@supabase/supabase-js";
 import { useState } from "react";
 
-export default async function Index() {
-  const supabase = createServerComponentClient({ cookies });
+// import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { cookies } from "next/headers";
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default function Index() {
+  // const supabase = createServerComponentClient({ cookies });
+  const [supabase] = useState(() => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!));
 
-  const [phoneNumber, setPhoneNumber] = useState("");
+  // const {
+  //   data: { user },
+  // } = await supabase.auth.getUser();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Perform any desired actions with the phone number, such as sending it to a server or performing validation
-    console.log(phoneNumber);
-    // Reset the input field
-    setPhoneNumber("");
+  const signUp = async () => {
+    let { error } = await supabase.auth.signUp({
+      phone: "+18103330792",
+      password: "some-password",
+    });
   };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form action={signUp}>
         <label>
           Phone Number:
-          <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+          <input type="text" />
         </label>
-        <button type="submit">Submit</button>
+        <button type="submit" onClick={signUp}>
+          Submit
+        </button>
       </form>
     </div>
   );
