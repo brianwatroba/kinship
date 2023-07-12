@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import * as Twilio from "twilio";
 import querystring from "querystring";
 import { createClient } from "@supabase/supabase-js";
+import { sendSms } from "../_utils";
 
 type TwilioWebookRequest = NextRequest & {
   body: ReadableStream;
@@ -55,6 +56,16 @@ export async function POST(request: TwilioWebookRequest) {
       .from("topics")
       .update({ completed: true })
       .eq("id", activeTopic.id);
+
+    const promises = activeFamilyMembers.map((param) => {
+      const params = {
+        to: user.phone,
+        from: process.env.TWILIO_PHONE_NUMBER!,
+        body: `Answers are in! Today's summary: /topics/${activeTopic.id}`,
+      };
+      return sendSms(params);
+    });
+    await Promise.all(promises);
   }
 
   return sendSmsResponse({ text: "Response saved!" });
