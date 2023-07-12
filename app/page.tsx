@@ -15,7 +15,7 @@ export default function Index() {
 
   const signUp = async () => {
     let { error } = await supabase.auth.signUp({
-      phone: "+18103330792",
+      phone: "+15555555",
       password: "some-password",
     });
   };
