@@ -1,51 +1,74 @@
-# Supabase Starter
+# Kinship 🌱
 
-This starter configures Supabase Auth to use cookies, making the user's session available throughout the entire Next.js app - Client Components, Server Components, Route Handlers, Server Actions and Middleware.
+SMS-based daily question game that helps families feel more connected.
 
-## Deploy your own
+<br>
+<div style="display: flex;">
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" height="20" />
+  <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" height="20" />
+  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" height="20" />
+  <img src="https://img.shields.io/badge/Twilio-F22F46?style=for-the-badge&logo=Twilio&logoColor=white" height="20" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" height="20" />
+  <img src="https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white" height="20" />
+</div>
 
-The Vercel deployment will guide you through creating a Supabase account and project. After installation of the Supabase integration, all relevant environment variables will be set up so that the project is usable immediately after deployment 🚀
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&integration-ids=oac_jUduyjQgOyzev1fjrW83NYOv)
+![Kinship user flow](https://res.cloudinary.com/dfuyisjqi/image/upload/v1683811744/kinship/flowdemo_afkdrz.png)
 
-## How to use
+## The challenge
 
-1. Create a [new Supabase project](https://database.new)
-1. Run `npx create-next-app -e with-supabase` to create a Next.js app using the Supabase Starter template
-1. Use `cd` to change into the app's directory
-1. Run `npm install` to install dependencies
-1. Rename `.env.local.example` to `.env.local` and update the values for `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` from [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
-1. Run `npm run dev` to start the local development server
+In today's digital age, families often feel disconnected from each other. Generational gaps, distance, and different use/relationships with social media add to the divide. My family definitely feels this.
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+We all relate to technology differently, and sharing personal updates on apps like Instagram or BeReal don't work for all families, especially if some family members aren't tech-savvy or prefer to keep their updates private.
 
-### Create a Supabase client
+## Our solution
 
-Check out the [`/app/_examples`](./app/_examples/) folder for an example of creating a Supabase client in:
+Kinship is a simple, daily SMS question game that helps families stay connected. Near or far. It resembles a prompted, interactive journal experience that you can share together.
 
-- [Client Components](./app/_examples/client-component/page.tsx)
-- [Server Components](./app/_examples/server-component/page.tsx)
-- [Route Handlers](./app/_examples/route-handler/route.ts)
-- [Server Actions](./app/_examples/server-action/page.tsx)
+Kinship is unique in three main ways:
 
-### Create `todo` table and seed with data (optional)
+- **It's dead simple:** all interactions happen over SMS. Answer summaries sent as static web pages. Kinship is built so that even my grandma (with her enlarged iPhone font) can use it with ease.
+- **It's lightweight:** just one, short interaction a day. Similar to Wordle, we want to bring delight without upping your screen time.
+- **It's family-centric:** sharing groups are limited to just your family, so there isn't any pressure to share with the world. It's a safe space to share personal updates and moments.
 
-Navigate to [your project's SQL Editor](https://app.supabase.com/project/_/sql), click `New query`, paste the contents of the [init.sql](./supabase/migrations/20230618024722_init.sql) file and click `RUN`.
+I built Kinship as a hobby project for my family. We're split across the country, and it's to drift apart. Social media just wasn't doing it for us.
 
-This will create a basic `todos` table, enable Row Level Security (RLS), and write RLS policies enabling `select` and `insert` actions for `authenticated` users.
+## How it works
 
-To seed your `todos` table with some dummy data, run the contents of the [seed.sql](./supabase/seed.sql) file.
+### 1. **Family members sign up:**
 
-## Feedback and issues
+Users sign up for Kinship by providing their phone number and agreeing to the terms of service. Sign up is currently whitelisted to early alpha users. Please reach out if you're interested!
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+### 2. **Get daily prompts via sms:**
 
-## More Supabase examples
+Once users have signed up, they'll start receiving a daily SMS message with a prompt. The questions are designed to be simple and easy to answer, and they can be related to a variety of topics such as how your day is going, what you're looking forward to, or a fun fact about yourself. Some examples might be: "send a photo of where you are right now, what are you up to?", or "what family ritual or tradition do you especially want to pass on to future generations?".
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
-- [Next.js Auth Helpers Docs](https://supabase.com/docs/guides/auth/auth-helpers/nextjs)
+### 3. **Express your answers with text, images, or video:**
+
+Family members can submit their answers by responding via SMS in their personal Kinship thread. They can use text, images, or video to express themselves.
+
+The catch: no one can see each others answers until all family members have responded. Family members get a confirmation receipt text for each answer, and they can see how many other family members have already responded, but the full summary isn't sent until all responses are in.
+
+### 4. **View responses once everyone has answered:**
+
+Once all responses are in each day, Kinship generates a summary of everyone's answers and sends it to all family members via a link to a static web page. This allows family members to view each other's answers and get a sense of what's going on in each other's lives.
+
+### 5. **Customize your family's experience:**
+
+Kinship allows families to customize their experience by controlling the tone and topics of the daily questions.
+
+Users can choose to receive questions that are more lighthearted and fun, or more serious and reflective. They can also submit custom questions that are tailored to their family's interests or current events. Users can also adjust the frequency of the questions to better fit their family's schedule and preferences. Multiple questions can also be triggered each day if the family decides to do so.
+
+## Access
+
+_Currently in closed alpha_
+
+If you're interested, please reach out for access. Would love for you to try it out and give feedback!
+
+## Contributing
+
+Pull requests are welcome. Thanks for your interest!
 
 ## Project init
 
@@ -60,3 +83,7 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 ## Deployment:
 
 1. `supabase link --project-ref #PROJECT_REF`
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

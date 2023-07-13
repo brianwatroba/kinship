@@ -1,0 +1,26 @@
+const SMS_RESPONSES = {
+  success: {
+    body: "test",
+    numSegments: "1",
+    direction: "outbound-api",
+    from: "+15005550006",
+    to: "+15005550006",
+    dateUpdated: "2023-07-12T13:54:15.000Z",
+    price: null,
+    errorMessage: null,
+    uri: "/2010-04-01/Accounts/AC15f09d1c48c693b8ae645bd92f3e2e23/Messages/SM1dc441a10c6629e2c0fe649d89e1c129.json",
+    accountSid: "AC15f09d1c48c693b8ae645bd92f3e2e23",
+    numMedia: "0",
+    status: "queued",
+    messagingServiceSid: null,
+    sid: "SM1dc441a10c6629e2c0fe649d89e1c129",
+    dateSent: null,
+    dateCreated: "2023-07-12T13:54:15.000Z",
+    errorCode: null,
+    priceUnit: "USD",
+    apiVersion: "2010-04-01",
+    subresourceUris: {
+      media: "/2010-04-01/Accounts/AC15f09d1c48c693b8ae645bd92f3e2e23/Messages/SM1dc441a10c6629e2c0fe649d89e1c129/Media.json",
+    },
+  },
+};

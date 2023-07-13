@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/topics/start",
+      "schedule": "0 10 * * 2,5"
+    },
+    {
+      "path": "/api/cron/topics/remind",
+      "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/cron/topics/end",
+      "schedule": "0 20 * * *"
+    }
+  ]
+}
