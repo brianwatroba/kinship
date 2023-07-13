@@ -1,5 +1,7 @@
 import Image from "next/image";
 import dayjs from "dayjs";
+import "dayjs/locale/en";
+
 import Navbar from "@/components/NavBar";
 import UserResponses from "@/components/UserResponses";
 import { Metadata, ResolvingMetadata } from "next";
@@ -20,15 +22,13 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
 
   const { data: family } = await supabase.from("families").select("*").eq("id", topic.family_id).single();
 
-  const url = `https://${process.env.VERCEL_URL}/api/og?title=${topic.prompt}&familyname=$The ${family.name} Family`;
-
-  console.log("url", url);
+  const url = `https://${process.env.VERCEL_URL}/api/og?title=${topic.prompt}&familyname=The ${family.name} Family`;
 
   return {
     title: "Today's answers",
     openGraph: {
-      title: "Today's answers",
-      description: "Today",
+      title: dayjs(topic.created_at).locale("en").format("dddd | M/D/YY"),
+      description: "Today's answers",
       locale: "en_US",
       type: "website",
       images: [{ url, width: 1200, height: 627 }],
