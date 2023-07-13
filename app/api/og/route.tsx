@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     // dynamic params
     const title = searchParams.has("title") ? searchParams.get("title")?.slice(0, 100) : "My default title";
 
-    const familyname = searchParams.has("familyname") ? searchParams.get("familyname")?.slice(0, 100) : "My default familyname";
+    const familyname = searchParams.has("familyname") ? searchParams.get("familyname")?.slice(0, 100) : "";
 
     return new ImageResponse(
       (

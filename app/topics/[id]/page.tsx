@@ -14,22 +14,25 @@ type Props = {
 };
 
 export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const id = params.id;
+  const topicId = params.id;
 
-  const { data: topic, error: topicCallError } = await supabase.from("topics").select("*").eq("id", id).single();
+  const { data: topic, error: topicCallError } = await supabase.from("topics").select("*").eq("id", topicId).single();
 
-  const url = `https://${process.env.VERCEL_URL}/api/og?title=${topic.prompt}}`;
+  const { data: family } = await supabase.from("families").select("*").eq("id", topic.family_id).single();
+
+  const url = `https://${process.env.VERCEL_URL}/api/og?title=${topic.prompt}&familyname=$The ${family.name} Family`;
 
   console.log("url", url);
 
   return {
-    title: "My page title",
+    title: "Today's answers",
     openGraph: {
-      title: "My page title",
-      description: "Todays answers",
+      title: "Today's answers",
+      description: "Today",
       locale: "en_US",
       type: "website",
       images: [{ url, width: 1200, height: 627 }],
+      url: `https://${process.env.VERCEL_URL}/topics/${topicId}`,
     },
   };
 }
