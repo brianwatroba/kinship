@@ -28,7 +28,7 @@ const getAllUsersByFamily = async (params: { familyId: string }) => {
   return familyMembers;
 };
 
-export const startTopic = async (params: { familyId: string }) => {
+const startTopic = async (params: { familyId: string }) => {
   const { familyId } = params;
   const familyMembers = await getAllUsersByFamily({ familyId });
   console.log(familyMembers);
