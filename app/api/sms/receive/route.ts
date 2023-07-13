@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import * as Twilio from "twilio";
 import querystring from "querystring";
-import { sendManySms } from "../_utils";
+import { sendManySms, sendSms } from "../_utils";
 import { supabase } from "../../../../supabase/client";
 import { RESPONSES } from "@/config/constants";
 
@@ -49,6 +49,8 @@ export async function POST(request: TwilioWebookRequest) {
   const allAnswered = activeFamilyMembers.every((member) => usersAnswered.has(member.id));
 
   const shouldMarkComplete = allAnswered && !activeTopic.completed;
+
+  await sendSms({ to: user.phone as string, body: RESPONSES.SAVED({ responded: usersAnswered.size, total: activeFamilyMembers.length }) });
 
   if (shouldMarkComplete) {
     const { data: updatedTopic, error: updateTopicError } = await supabase

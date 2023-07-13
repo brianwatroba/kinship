@@ -7,12 +7,20 @@ import { Metadata, ResolvingMetadata } from "next";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 const supabase = createServerComponentClient({ cookies });
-export async function generateMetadata({ params, searchParams }: any, parent: ResolvingMetadata): Promise<Metadata> {
-  // read route params
+
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const id = params.id;
 
-  // fetch data
   const { data: topic, error: topicCallError } = await supabase.from("topics").select("*").eq("id", id).single();
+
+  const url = `https:${process.env.VERCEL_URL}${topic.prompt}}`;
+
+  console.log("ENV", process.env);
 
   return {
     title: "My page title",
@@ -21,7 +29,7 @@ export async function generateMetadata({ params, searchParams }: any, parent: Re
       description: "Todays answers",
       locale: "en_US",
       type: "website",
-      images: [{ url: `https:${process.env.NEXT_PUBLIC_VERCEL_URL}${topic.prompt}}`, width: 1200, height: 627 }],
+      images: [{ url, width: 1200, height: 627 }],
     },
   };
 }
