@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "../../../../../supabase/client";
-import { sendSms } from "../../../../../app/api/sms/_utils";
+import { sendManySms } from "../../../../../app/api/sms/_utils";
 
 export async function POST(request: Request) {
   const families = await getAllFamilies();
@@ -31,7 +31,6 @@ const getAllUsersByFamily = async (params: { familyId: string }) => {
 const startTopic = async (params: { familyId: string }) => {
   const { familyId } = params;
   const familyMembers = await getAllUsersByFamily({ familyId });
-  console.log(familyMembers);
 
   const topic = {
     family_id: familyId,
@@ -40,13 +39,7 @@ const startTopic = async (params: { familyId: string }) => {
 
   await supabase.from("topics").insert(topic);
 
-  const promises = familyMembers.map((familyMember) => {
-    const params = {
-      to: familyMember.phone as string,
-      body: `${topic.prompt}`,
-    };
-    return sendSms(params);
-  });
+  const smsToSend = familyMembers.map((user) => ({ to: user.phone as string, body: topic.prompt }));
 
-  await Promise.all(promises);
+  await sendManySms(smsToSend);
 };

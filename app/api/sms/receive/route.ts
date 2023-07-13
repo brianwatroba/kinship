@@ -1,7 +1,6 @@
 import type { NextRequest } from "next/server";
 import * as Twilio from "twilio";
 import querystring from "querystring";
-import { createClient } from "@supabase/supabase-js";
 import { sendSms } from "../_utils";
 import { supabase } from "../../../../supabase/client";
 
@@ -94,12 +93,14 @@ const getUserByPhone = async (phone: string) => {
 
 //TODO: add model types
 const getActiveTopic = async (params: { familyId: string }) => {
-  const { data: topic, error } = await supabase
+  const { data: topics, error } = await supabase
     .from("topics")
     .select("*")
     .eq("family_id", params.familyId)
     .order("created_at", { ascending: false })
-    .single();
+    .limit(1);
   if (error) throw new Error("Error getting latest topic: " + error.message);
+
+  const [topic] = topics;
   return topic.completed ? undefined : topic;
 };
