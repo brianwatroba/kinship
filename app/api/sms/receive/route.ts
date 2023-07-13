@@ -69,7 +69,14 @@ export async function POST(request: TwilioWebookRequest) {
     await sendManySms(promises);
   }
 
-  return sendSmsResponse({ text: RESPONSES.SAVED({ responded: usersAnswered.size, total: activeFamilyMembers.length }) });
+  const response = new Twilio.twiml.MessagingResponse();
+  const xmlResponse = response.toString();
+  return new Response(xmlResponse, {
+    headers: {
+      "Content-Type": "text/xml",
+    },
+    status: 200,
+  });
 }
 
 const sendSmsResponse = (params: { text: string }) => {
