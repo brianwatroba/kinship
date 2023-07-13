@@ -13,11 +13,6 @@ export async function generateMetadata({ params, searchParams }: any, parent: Re
 
   // fetch data
   const { data: topic, error: topicCallError } = await supabase.from("topics").select("*").eq("id", id).single();
-  console.log("topic", topic);
-
-  // optionally access and extend (rather than replace) parent metadata
-  // const previousImages = (await parent).openGraph?.images || [];
-  console.log(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?title=${topic.prompt}}`);
 
   return {
     title: "My page title",
@@ -26,7 +21,7 @@ export async function generateMetadata({ params, searchParams }: any, parent: Re
       description: "Todays answers",
       locale: "en_US",
       type: "website",
-      images: [{ url: `http://localhost:3000/api/og?title=${topic.prompt}}`, width: 1200, height: 627 }],
+      images: [{ url: `https:${process.env.NEXT_PUBLIC_VERCEL_URL}${topic.prompt}}`, width: 1200, height: 627 }],
     },
   };
 }
