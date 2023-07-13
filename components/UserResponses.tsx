@@ -17,7 +17,7 @@ const UserResponses = ({ userResponses }: UserResponsesProps) => {
       </div>
       <div className="flex flex-col items-center justify-center bg-background w-screen px-8 py-16">
         {responses.map((response: any) => (
-          <ResponseCard key={response.createdAt} text={response.text} media={response.media} />
+          <ResponseCard key={response.id} type={response.type} content={response.content} />
         ))}
       </div>
     </>

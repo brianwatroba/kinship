@@ -2,47 +2,61 @@ import Image from "next/image";
 import dayjs from "dayjs";
 import Navbar from "@/components/NavBar";
 import UserResponses from "@/components/UserResponses";
+import { Metadata, ResolvingMetadata } from "next";
 
-const family = {
-  id: "1",
-  name: "Watroba",
-  image: "https://res.cloudinary.com/dfuyisjqi/image/upload/v1682873688/kinship/families/watroba_tet5wi.png",
-  paused: false,
-};
-const topic = {
-  id: "1",
-  prompt: "What is your favorite color?",
-  createdAt: new Date(),
-  participants: ["1", "2", "3"],
-};
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+const supabase = createServerComponentClient({ cookies });
+// export async function generateMetadata({ params, searchParams }: any, parent: ResolvingMetadata): Promise<Metadata> {
+//   // read route params
+//   const id = params.id;
 
-const usersResponses: { [key: string]: {} } = {
-  "1": {
-    name: "Brian",
-    image: "https://res.cloudinary.com/dfuyisjqi/image/upload/v1682873935/kinship/users/brian_ukf3rr.jpg",
-    responses: [{ text: "blue", createdAt: new Date(), media: "" }],
-  },
-  "2": {
-    name: "Kevin",
-    image: "https://res.cloudinary.com/dfuyisjqi/image/upload/v1682873934/kinship/users/kevin_neaf2q.jpg",
-    responses: [{ text: "Green", createdAt: new Date(), media: "" }],
-  },
-  "3": {
-    name: "Kim",
-    image: "https://res.cloudinary.com/dfuyisjqi/image/upload/v1682873743/kinship/users/kim_sgkfpy.png",
-    responses: [{ text: "Green", createdAt: new Date(), media: "" }],
-  },
-};
+//   // fetch data
+//   const { data: topic, error: topicCallError } = await supabase.from("topics").select("*").eq("id", id).single();
+//   console.log("topic", topic);
+
+//   // optionally access and extend (rather than replace) parent metadata
+//   // const previousImages = (await parent).openGraph?.images || [];
+//   console.log(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?title=${topic.prompt}}`);
+
+//   return {
+//     title: "My page title",
+//     openGraph: {
+//       title: "My page title",
+//       description: "Todays answers",
+//       locale: "en_US",
+//       type: "website",
+//       images: [{ url: `http://localhost:3000/api/og?title=${topic.prompt}}`, width: 1200, height: 627 }],
+//     },
+//   };
+// }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  // needs topic, family, userresponses
+  const topicId = params.id;
+
+  const { data: topic } = await supabase.from("topics").select("*").eq("id", topicId).single();
+  const { data: posts } = await supabase.from("posts").select("*").eq("topic_id", topicId);
+  const { data: family } = await supabase.from("families").select("*").eq("id", topic.family_id).single();
+  const { data: familyMembers } = await supabase.from("users").select("*").eq("family_id", topic.family_id); // needs to be active only
+
+  const participants = familyMembers!.map((member) => member.id);
+
+  const usersResponses = {} as { [key: string]: any };
+
+  familyMembers?.forEach((user) => {
+    usersResponses[user.id] = {
+      name: user.first_name,
+      image: user.image,
+      responses: posts?.filter((post) => post.user_id === user.id),
+    };
+  });
 
   return (
     <div className="flex flex-col items-center justify-center w-screen overflow-hidden bg-background">
       <Navbar />
       <Banner family={family} date={topic.createdAt} />
       <PromptCard prompt={topic.prompt} />
-      {topic.participants.map((user: string) => (
+      {participants.map((user: string) => (
         <UserResponses key={user} userResponses={usersResponses[user]} />
       ))}
     </div>

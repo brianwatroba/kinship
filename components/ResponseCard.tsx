@@ -1,17 +1,17 @@
 import Image from "next/image";
 
 type ResponseCardProps = {
-  text: string;
-  media: string;
+  type: string;
+  content: string;
 };
 
-const ResponseCard = ({ text, media }: ResponseCardProps) => {
-  const isTextResponse = text !== "";
-  const isMediaResponse = media !== "";
+const ResponseCard = ({ type, content }: ResponseCardProps) => {
+  const isTextResponse = type === "text";
+  const isMediaResponse = type === "image";
   return (
     <>
-      {isTextResponse && <TextResponse text={text} />}
-      {isMediaResponse && <MediaResponse media={media} />}
+      {isTextResponse && <TextResponse text={content} />}
+      {isMediaResponse && <MediaResponse media={content} />}
     </>
   );
 };

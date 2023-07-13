@@ -1,8 +1,9 @@
 import type { NextRequest } from "next/server";
 import * as Twilio from "twilio";
 import querystring from "querystring";
-import { sendSms } from "../_utils";
+import { sendSms, sendManySms } from "../_utils";
 import { supabase } from "../../../../supabase/client";
+import { RESPONSES } from "@/config/constants";
 
 type TwilioWebookRequest = NextRequest & {
   body: ReadableStream;
@@ -22,7 +23,7 @@ export async function POST(request: TwilioWebookRequest) {
   }
 
   const activeTopic = await getActiveTopic({ familyId: user.family_id });
-  if (!activeTopic) return sendSmsResponse({ text: "No active topic!" });
+  if (!activeTopic) return sendSmsResponse({ text: RESPONSES.NO_ACTIVE_TOPIC });
 
   // Saves posts from SMS
   const newPosts = [];
@@ -47,24 +48,26 @@ export async function POST(request: TwilioWebookRequest) {
 
   const allAnswered = activeFamilyMembers.every((member) => usersAnswered.has(member.id));
 
-  if (allAnswered && !activeTopic.completed) {
-    // save topic as completed
+  const shouldMarkComplete = allAnswered && !activeTopic.completed;
+
+  if (shouldMarkComplete) {
     const { data: updatedTopic, error: updateTopicError } = await supabase
       .from("topics")
       .update({ completed: true })
       .eq("id", activeTopic.id);
 
     const promises = activeFamilyMembers.map((familyMember) => {
-      const params = {
+      return {
         to: familyMember.phone as string,
-        body: `Answers are in! Today's summary: https://${request.headers.get("x-forwarded-host")}/topics/${activeTopic.id}`,
+        body: RESPONSES.SUMMARY({
+          summaryLink: `https://${request.headers.get("x-forwarded-host")}/topics/${activeTopic.id}`,
+        }),
       };
-      return sendSms(params);
     });
-    await Promise.all(promises);
+    await sendManySms(promises);
   }
 
-  return sendSmsResponse({ text: "Response saved!" });
+  return sendSmsResponse({ text: RESPONSES.SAVED({ responded: usersAnswered.size, total: activeFamilyMembers.length }) });
 }
 
 const sendSmsResponse = (params: { text: string }) => {

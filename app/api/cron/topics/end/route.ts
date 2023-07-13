@@ -18,27 +18,20 @@ export async function POST(request: Request) {
 
     if (!activeFamilyMembers) throw new Error("No active family members found");
 
-    const topicPosts = await getPostsByTopic({ topicId: activeTopic.id });
-    const usersAnswered = new Set(topicPosts.map((post) => post.user_id));
-    const usersNotAnswered = activeFamilyMembers.filter((user) => !usersAnswered.has(user.id));
+    const { data: updatedTopic, error: updateTopicError } = await supabase
+      .from("topics")
+      .update({ completed: true })
+      .eq("id", activeTopic.id);
 
-    const answeredProportion = Math.floor((usersAnswered.size / activeFamilyMembers.length) * 100);
-
-    const reminderMsg =
-      answeredProportion < 75
-        ? RESPONSES.REMINDER_THRESHOLD_UNMET({
-            responded: usersAnswered.size,
-            total: activeFamilyMembers.length,
-            prompt: activeTopic.prompt,
-          })
-        : RESPONSES.REMINDER_THRESHOLD_MET({
-            responded: usersAnswered.size,
-            total: activeFamilyMembers.length,
-            prompt: activeTopic.prompt,
-          });
-
-    const smsToSend = usersNotAnswered.map((user) => ({ to: user.phone as string, body: reminderMsg }));
-    await sendManySms(smsToSend);
+    const promises = activeFamilyMembers.map((familyMember) => {
+      return {
+        to: familyMember.phone as string,
+        body: RESPONSES.SUMMARY({
+          summaryLink: ` https://${request.headers.get("x-forwarded-host")}/topics/${activeTopic.id}`,
+        }),
+      };
+    });
+    await sendManySms(promises);
   }
   return NextResponse.json({
     status: 200,
