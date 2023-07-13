@@ -18,7 +18,9 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
 
   const { data: topic, error: topicCallError } = await supabase.from("topics").select("*").eq("id", id).single();
 
-  const url = `https:${process.env.VERCEL_URL}${topic.prompt}}`;
+  const url = `https://${process.env.VERCEL_URL}/api/og?title=${topic.prompt}}`;
+
+  console.log("url", url);
 
   console.log("ENV", process.env);
 
