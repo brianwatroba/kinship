@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/topics/start",
-      "schedule": "0 10 * * 2,6"
+      "schedule": "0 10 * * 2,5"
     },
     {
       "path": "/api/cron/topics/remind",
