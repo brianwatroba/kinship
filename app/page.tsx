@@ -8,6 +8,7 @@ import { useState } from "react";
 export default function Index() {
   // const supabase = createServerComponentClient({ cookies });
   const [supabase] = useState(() => createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!));
+  const [phone, setPhone] = useState("");
 
   // const {
   //   data: { user },
@@ -15,7 +16,7 @@ export default function Index() {
 
   const signUp = async () => {
     let { error } = await supabase.auth.signUp({
-      phone: "+15555555",
+      phone,
       password: "some-password",
     });
   };
@@ -25,7 +26,7 @@ export default function Index() {
       <form action={signUp}>
         <label>
           Phone Number:
-          <input type="text" />
+          <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} />
         </label>
         <button type="submit" onClick={signUp}>
           Submit
