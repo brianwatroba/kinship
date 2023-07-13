@@ -22,8 +22,6 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
 
   console.log("url", url);
 
-  console.log("ENV", process.env);
-
   return {
     title: "My page title",
     openGraph: {
