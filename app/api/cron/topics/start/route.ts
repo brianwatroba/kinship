@@ -46,11 +46,11 @@ const startTopic = async (params: { familyId: string }) => {
   await sendManySms(smsToSend);
 };
 
-export const getRandomValueInRange = (min: number, max: number): number => {
+const getRandomValueInRange = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const generatePrompt = () => {
+const generatePrompt = () => {
   const days: { name: string; shouldSend: boolean; promptWeight: string }[] = [
     { name: "SUNDAY", shouldSend: true, promptWeight: "heavy" },
     { name: "MONDAY", shouldSend: false, promptWeight: "light" },
