@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
                 width={192}
               />
               <h1 tw="text-[60px] text-white font-bold text-left">"{title}"</h1>
-              <h2>{familyname}</h2>
+              <h2 tw="text-[24px] text-black font-bold text-left">{familyname}</h2>
             </div>
           </div>
         </div>

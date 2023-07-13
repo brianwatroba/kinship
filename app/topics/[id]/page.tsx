@@ -32,7 +32,7 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
       locale: "en_US",
       type: "website",
       images: [{ url, width: 1200, height: 627 }],
-      url: `https://${process.env.VERCEL_URL}/topics/${topicId}`,
+      // url: `https://${process.env.VERCEL_URL}/topics/${topicId}`,
     },
   };
 }
