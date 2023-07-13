@@ -7,29 +7,29 @@ import { Metadata, ResolvingMetadata } from "next";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 const supabase = createServerComponentClient({ cookies });
-// export async function generateMetadata({ params, searchParams }: any, parent: ResolvingMetadata): Promise<Metadata> {
-//   // read route params
-//   const id = params.id;
+export async function generateMetadata({ params, searchParams }: any, parent: ResolvingMetadata): Promise<Metadata> {
+  // read route params
+  const id = params.id;
 
-//   // fetch data
-//   const { data: topic, error: topicCallError } = await supabase.from("topics").select("*").eq("id", id).single();
-//   console.log("topic", topic);
+  // fetch data
+  const { data: topic, error: topicCallError } = await supabase.from("topics").select("*").eq("id", id).single();
+  console.log("topic", topic);
 
-//   // optionally access and extend (rather than replace) parent metadata
-//   // const previousImages = (await parent).openGraph?.images || [];
-//   console.log(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?title=${topic.prompt}}`);
+  // optionally access and extend (rather than replace) parent metadata
+  // const previousImages = (await parent).openGraph?.images || [];
+  console.log(`${process.env.NEXT_PUBLIC_VERCEL_URL}/api/og?title=${topic.prompt}}`);
 
-//   return {
-//     title: "My page title",
-//     openGraph: {
-//       title: "My page title",
-//       description: "Todays answers",
-//       locale: "en_US",
-//       type: "website",
-//       images: [{ url: `http://localhost:3000/api/og?title=${topic.prompt}}`, width: 1200, height: 627 }],
-//     },
-//   };
-// }
+  return {
+    title: "My page title",
+    openGraph: {
+      title: "My page title",
+      description: "Todays answers",
+      locale: "en_US",
+      type: "website",
+      images: [{ url: `http://localhost:3000/api/og?title=${topic.prompt}}`, width: 1200, height: 627 }],
+    },
+  };
+}
 
 export default async function Page({ params }: { params: { id: string } }) {
   const topicId = params.id;
