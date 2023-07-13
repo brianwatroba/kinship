@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
   // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-session-with-middleware
   await supabase.auth.getSession();
 
-  if (req.nextUrl.pathname.startsWith(`/api/cron`) && process.env.NODE_ENV === "production") {
+  if (req.nextUrl.pathname.startsWith(`/api/cron`) && process.env.NODE_ENV !== "development") {
     if (!req.headers.get("referer")?.includes(process.env.APP_URL as string)) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
