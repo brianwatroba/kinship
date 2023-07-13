@@ -3,35 +3,36 @@ import * as Twilio from "twilio";
 import querystring from "querystring";
 import { createClient } from "@supabase/supabase-js";
 import { sendSms } from "../_utils";
+import { supabase } from "../../../../supabase/client";
 
 type TwilioWebookRequest = NextRequest & {
   body: ReadableStream;
 } & { headers: { "X-Twilio-Signature": string } };
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-
 export async function POST(request: TwilioWebookRequest) {
   const body = querystring.parse(await request.text());
+  console.log(body);
 
   const { From: from, Body: text, NumMedia: mediaCount } = body;
+
   const user = await getUserByPhone(body.From as string);
-  const media = [];
+  const media: string[] = [];
   for (let i = 0; i < Number(mediaCount); i++) {
-    media.push(body[`MediaUrl${i}`]);
+    const mediaUrl = body[`MediaUrl${i}`] as string;
+    media.push(mediaUrl);
   }
 
-  // const signature = request.headers.get("X-Twilio-Signature");
-  // if (!signature) throw new Error("No Twilio signature in headers");
-  // const isValid = Twilio.validateRequest(process.env.TWILIO_ACCOUNT_SID ?? "", signature, process.env.TWILIO_AUTH_TOKEN ?? "", body);
-  // if (!isValid) throw new Error("Invalid Twilio webhook signature");
-
-  const activeTopic = await getActiveTopic(user.family_id);
+  const activeTopic = await getActiveTopic({ familyId: user.family_id });
   if (!activeTopic) return sendSmsResponse({ text: "No active topic!" });
 
   // Saves posts from SMS
   const newPosts = [];
-  if (text) newPosts.push({ topic_id: activeTopic.id, user_id: user.id, type: "text", content: text });
-  if (media) media.forEach((imageUrl) => newPosts.push({ topic_id: activeTopic.id, user_id: user.id, type: "image", content: imageUrl }));
+  if (text) newPosts.push({ topic_id: activeTopic.id, user_id: user.id, type: "text", content: text as string });
+  if (media)
+    media.forEach((imageUrl) => {
+      if (!imageUrl) return;
+      newPosts.push({ topic_id: activeTopic.id, user_id: user.id, type: "image", content: imageUrl });
+    });
   const { data: posts, error } = await supabase.from("posts").insert(newPosts);
 
   const { data: activeFamilyMembers, error: familyMembersError } = await supabase
@@ -43,12 +44,9 @@ export async function POST(request: TwilioWebookRequest) {
   if (!activeFamilyMembers) throw new Error("No active family members found");
 
   const topicPosts = await getPostsByTopic({ topicId: activeTopic.id });
-  console.log("topicposts", topicPosts);
   const usersAnswered = new Set(topicPosts.map((post) => post.user_id));
 
   const allAnswered = activeFamilyMembers.every((member) => usersAnswered.has(member.id));
-
-  console.log("answered", usersAnswered);
 
   if (allAnswered && !activeTopic.completed) {
     // save topic as completed
@@ -57,11 +55,10 @@ export async function POST(request: TwilioWebookRequest) {
       .update({ completed: true })
       .eq("id", activeTopic.id);
 
-    const promises = activeFamilyMembers.map((param) => {
+    const promises = activeFamilyMembers.map((familyMember) => {
       const params = {
-        to: user.phone,
-        from: process.env.TWILIO_PHONE_NUMBER!,
-        body: `Answers are in! Today's summary: /topics/${activeTopic.id}`,
+        to: familyMember.phone as string,
+        body: `Answers are in! Today's summary: https://${request.headers.get("x-forwarded-host")}/topics/${activeTopic.id}`,
       };
       return sendSms(params);
     });
@@ -96,11 +93,11 @@ const getUserByPhone = async (phone: string) => {
 };
 
 //TODO: add model types
-const getActiveTopic = async (familyId: string) => {
+const getActiveTopic = async (params: { familyId: string }) => {
   const { data: topic, error } = await supabase
     .from("topics")
     .select("*")
-    .eq("family_id", familyId)
+    .eq("family_id", params.familyId)
     .order("created_at", { ascending: false })
     .single();
   if (error) throw new Error("Error getting latest topic: " + error.message);
