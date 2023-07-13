@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import * as Twilio from "twilio";
 import querystring from "querystring";
-import { sendSms, sendManySms } from "../_utils";
+import { sendManySms } from "../_utils";
 import { supabase } from "../../../../supabase/client";
 import { RESPONSES } from "@/config/constants";
 
